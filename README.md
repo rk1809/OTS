@@ -1,6 +1,7 @@
-# oilTransactionSys
+#OTS PROJECT
 
-Brief Description
+Description:
+
 We have a implemented a Web Based Oil Transaction System  which can serve three types users ie. client, trader, and manager. A client can directly buy/sell oil depending on his current oil reserves, or contact a trader to perform these transactions for him. Upon each transaction client pays commission to the company in form of either oil or cash. A client has a level which is initially SILVER and changes to GOLD after 30 barrels are purchased in a single month. A client’s commission is applied according to his level and his oil reserves or account balance is adjusted accordingly. 
 
 The company database keeps records for each transactions. Client can pay money to the company from time to time to settle their transactional balances. A  Trader can cancel certain payments and oil transactions, but these cancellations are logged for audit purposes. Payments and cancellations must go through traders only. 
