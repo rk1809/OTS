@@ -5,10 +5,6 @@ package com.ots.dao;
 
 import org.springframework.stereotype.Repository;
 
-/**
- * @author kanchan
- *
- */
 
 @Repository
 public class RoleDaoImpl {
