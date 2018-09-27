@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package com.ots.dao;
 
 import java.sql.PreparedStatement;
@@ -18,10 +16,6 @@ import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationExceptio
 import com.ots.common.OrderSummaryBean;
 import com.ots.common.UserBean;
 
-/**
- * @author madhuri
- *
- */
 
 @Repository
 public class CancelDaoImpl {
