@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package com.ots.dao;
 
 import java.sql.PreparedStatement;
@@ -16,10 +14,6 @@ import org.springframework.stereotype.Repository;
 
 import com.ots.common.PaymentBean;
 
-/**
- * @author madhuri
- *
- */
 @Repository
 public class PaymentDaoImpl {
 
