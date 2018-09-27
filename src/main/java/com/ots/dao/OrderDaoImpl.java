@@ -1,7 +1,4 @@
 
-/**
- * 
- */
 package com.ots.dao;
 
 import java.sql.Connection;
@@ -26,10 +23,6 @@ import com.ots.common.ReportOilBean;
 import com.ots.rowmapper.OrderRowMapper;
 import com.ots.rowmapper.ReportOilMapper;
 
-/**
- * @author madhuri
- *
- */
 
 @Repository
 public class OrderDaoImpl {
