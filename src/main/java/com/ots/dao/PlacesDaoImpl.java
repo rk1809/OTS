@@ -22,12 +22,6 @@ import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationExceptio
 import com.ots.common.OrderSummaryBean;
 import com.ots.rowmapper.OrderRowMapper;
 
-/**
- * This repository is used for inserting entry into places table.
- * @author kanchan
- *
- */
-
 @Repository
 public class PlacesDaoImpl {
 
