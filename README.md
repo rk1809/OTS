@@ -174,11 +174,8 @@ Development Environment:
 	
 Source control management: 
 		GIT
-
-
-	As we can see in the above architecture diagram, JSP, jQuery and CSS are 
-
-primarily used in order to render the frontend of the oil transaction system. 
+		
+	As we can see in the above architecture diagram, JSP, jQuery and CSS are primarily used in order to render the frontend of the oil transaction system. 
 
 The presentation layer communicates with the Spring Controller called 
 
