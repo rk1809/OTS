@@ -1,112 +1,34 @@
 OTS PROJECT:
-	I have implemented a Web Based Oil Transaction System which can serve 
-three types users i.e. Client, Trader, and Manager. A client can buy/sell oil 
-directly, depending on his current oil reserves, or contact a trader to perform 
-these transactions for him. Based on each transaction, client pays commission to 
-the company in form of either oil or cash.
-	There are certain levels are available for clients based upon their 
-
-purchase. It starts with SILVER and changes to GOLD, if they purchase 30 barrels 
-
-in a single month. Commissions are applied as per their levels and their oil 
-
-reserves or account balance are adjusted accordingly.
-
-	OTS database keeps track of all the records of each transaction. Client 
-
-can pay money to the company from time to time to settle their balances. A 
-
-Trader can cancel certain payments and oil transactions, but these cancellations 
-
-are logged for audit purposes. Payments and cancellations must go through 
-
-traders only, not through anyone else. 
+	I have implemented a Web Based Oil Transaction System which can serve three types users i.e. Client, Trader, and Manager. A client can buy/sell oil directly, depending on his current oil reserves, or contact a trader to perform 
+these transactions for him. Based on each transaction, client pays commission to the company in form of either oil or cash.
+	There are certain levels are available for clients based upon their purchase. It starts with SILVER and changes to GOLD, if they purchase 30 barrels in a single month. Commissions are applied as per their levels and their oil reserves or account balance are adjusted accordingly.
+	OTS database keeps track of all the records of each transaction. Client can pay money to the company from time to time to settle their balances. A Trader can cancel certain payments and oil transactions, but these cancellations are logged for audit purposes. Payments and cancellations must go through traders only, not through anyone else. 
+	A manager(administrator) is also a trader and has all functionalities available to a trader. Additionally, a manager can also view reports which gives him a brief analysis of various trades of the OTS system.
 	
-A manager(administrator) is also a trader and has all functionalities 
-
-available to a trader. Additionally, a manager can also view reports which gives 
-
-him a brief analysis of various trades of the OTS system. 
-
-
-Assumptions
-:
-	Client cannot pay money directly and it has to be come through a trader 	
-
-only - since the requirement states that trader information must be 	recorded 
-
-for each payment.
-
-	
-Clients has to settle the balances time to time and are not allowed to 		
-
-make partial payments.
-
-
+Assumptions:
+	Client cannot pay money directly and it has to be come through a trader only - since the requirement states that trader information must be recorded for each payment.	
+	Clients has to settle the balances time to time and are not allowed to make partial payments.
 	Total oil quantity-initial value starts from zero.
-
-
-	Oil prices will be downloaded through an external downloader service 		
-
-(Enhancement) that would insert the data into the database by logging 		
-
-onto the system using user “oil_price_loader”
-.
-
-	Client is not allowed to cancel their order directly, they much contact 	
-
-trader/administrator for cancelling their order.
-
-
+	Oil prices will be downloaded through an external downloader service(Enhancement) that would insert the data into the database 		by logging onto the system using user “oil_price_loader”
+	Client is not allowed to cancel their order directly, they much contact trader/administrator for cancelling their order.
 	Payment cannot be completely cancelled - Only orders can be cancelled.
-•		
-
 	An administrator can add another administrator.
-
-
 	An Administrator is a Trader with higher privileges.
-
-
 	There is no cancellation fee.
-
-
+	
 Security Measures Taken:
+	For Login, Post form has been provided, so that credentials are notvisible in the webpage.
+	A different user id has been created for the utility that downloads the
+	oil price data into the system (userName- oil_price_loader). This user ID has not been given access to any tables apart from oil_prices.
+	All IDs are stored as UUID instead of sequence number in order to avoid predictability of the ID. 
+	Some technical users tend to play with the Rest API calls and it is important that we make all Id column values unpredictable.
+	Prepared statements have been used throughout the application in order to avoid SQL injection attacks.
+	Instead of defining the new page for acceptingcredit card information, a third party which performs the credit card transaction through https, called “Stripe” was used. 
+	Stripe exposes an API that allows the integrator to charge users without storing the information on their end.
+	
+Application Authorization:
 
-	For Login, Post form has been provided, so that credentials are not 
-
-visible in the webpage.
-
-	A different user id has been created for the utility that downloads the 
-
-oil price data into the system (userName- oil_price_loader). This user ID has 
-
-not been given access to any tables apart from oil_prices.
-All IDs are stored as 
-
-UUID instead of sequence number in order to avoid predictability of the ID. 
-	Some technical users tend to play with the Rest API calls and it is 
-
-important that we make all Id column values unpredictable.
-
-	Prepared statements have been used throughout the application in order 
-
-to avoid SQL injection attacks.
-Instead of defining the new page for accepting 
-
-credit card information, a third party which performs the credit card 
-
-transaction through https, called “Stripe” was used. 
-	Stripe exposes an API that allows the integrator to charge users without 
-
-storing the information on their end.
-
-
-Application Authorization
-
-Role, Feature, Role_has_features tables have been created in order to implement 
-
-Access control on all the features that application has.
-
+Role, Feature, Role_has_features tables have been created in order to implement Access control on all the features that application has.
 
 Roles Added 
 
@@ -117,7 +39,6 @@ CLIENT
 TRADER
 
 Features/Authorization added:
-
 
 FEATURE_INSERT_USER(Admin)
 
@@ -131,17 +52,10 @@ FEATURE_VIEW_REPORTS(Admin)
 
 Database Authorization
 
-For Access to Database, if user needs external access to database, separate db-
+For Access to Database, if user needs external access to database, separate db-users have been created. 
+They have been granted access to only those tables that he/she is supposed to access.
 
-users have been created. 
-They have been granted access to only those tables that he/she is supposed to 
-
-access.
-
-
-Admin - This database user has complete access to all functionalities on all 
-
-tables.
+Admin - This database user has complete access to all functionalities on all tables.
 
 oil_price loader - This database user has restricted access. 
 
@@ -151,106 +65,55 @@ trader - This database user has restricted access to only those functionalities
 
 that trader can perform.
 
-
 GRANT SELECT ON ots.oil_prices TO 'trader'@'localhost';
 
-
-GRANT select,update ON ots.users to 'trader@localhost' identified by 
-
-'trader@123';
-
+GRANT select,update ON ots.users to 'trader@localhost' identified by 'trader@123';
 
 GRANT select ON ots.feature to 'trader@localhost' identified by 'trader@123';
 
-
 GRANT select ON ots.role to 'trader@localhost' identified by 'trader@123';
 
+GRANT select ON ots.role_has_features to 'trader@localhost' identified by 'trader@123';
 
-GRANT select ON ots.role_has_features to 'trader@localhost' identified by 
+GRANT select, update, insert ON ots.payments to 'trader@localhost' identified by 'trader@123';
 
-'trader@123';
+GRANT select, INSERT, UPDATE ON ots.orders to 'trader@localhost' identified by 'trader@123';
 
+GRANT select, INSERT, UPDATE ON ots.places to 'trader@localhost' identified by 'trader@123';
 
-GRANT select, update, insert ON ots.payments to 'trader@localhost' identified by 
+GRANT select,INSERT, UPDATE ON ots.cancels to 'trader@localhost' identified by 'trader@123';
 
-'trader@123';
+GRANT select, update ON ots.client to 'trader@localhost' identified by'trader@123';
 
+GRANT select, update ON ots.trader to 'trader@localhost' identified by 'trader@123';
 
-GRANT select, INSERT, UPDATE ON ots.orders to 'trader@localhost' identified by 
-
-'trader@123';
-
-
-GRANT select, INSERT, UPDATE ON ots.places to 'trader@localhost' identified by 
-
-'trader@123';
-
-
-GRANT select,INSERT, UPDATE ON ots.cancels to 'trader@localhost' identified by 
-
-'trader@123';
-
-
-GRANT select, update ON ots.client to 'trader@localhost' identified by 
-
-'trader@123';
-
-GRANT select, update ON ots.trader to 'trader@localhost' identified by 
-
-'trader@123';
-
-client - This database user has restricted access to only those Tables that can 
-
-be accessed by users of this role.
+client - This database user has restricted access to only those Tables that can be accessed by users of this role.
 
 GRANT SELECT ON ots.oil_prices TO 'client'@'localhost' ;
-GRANT select ON ots.role 
 
-to 'client@localhost' identified by 'client@123';
+GRANT select ON ots.role to 'client@localhost' identified by 'client@123';
 
 GRANT select ON ots.feature to 'client@localhost' identified by 'client@123';
 
-GRANT select ON ots.role_has_features to 'client@localhost' identified by 
-
-'client@123';
+GRANT select ON ots.role_has_features to 'client@localhost' identified by 'client@123';
 
 GRANT select ON ots.payments to 'client@localhost' identified by 'client@123';
 
-GRANT SELECT, INSERT ON ots.orders to 'client@localhost' identified by 
+GRANT SELECT, INSERT ON ots.orders to 'client@localhost' identified by 'client@123';
 
-'client@123';
+GRANT select, INSERT ON ots.places to 'client@localhost' identified by 'client@123';
 
-GRANT select, INSERT ON ots.places to 'client@localhost' identified by 
-
-'client@123';
-
-GRANT select, update ON ots.users to 'client@localhost' identified by 
-
-'client@123';
+GRANT select, update ON ots.users to 'client@localhost' identified by 'client@123';
 
 GRANT select ON ots.client to 'client@localhost' identified by 'client@123';
 
-
-
-
 Performance:
+Database is one of the most important tiers that is responsible for performance of the systems. OTS is not a very a compute heavy application and hence Database would definitely be the primary resource on which application’s performance will depend.
 
-	Database is one of the most important tiers that is responsible for 
-
-performance of the systems. OTS is not a very a compute heavy application and 
-
-hence Database would definitely be the primary resource on which application’s 
-
-performance will depend. 
 Measures taken for Performance of the database are as described below.
-
-
 Connection: 
-
 	Database connection takes time which is why dbcp connection pooling 
-
 Module was used in order to not have to create a new connection for every query. 
-
 DBCP connection pool of following configuration has been defined
 
 initialSize="3"
@@ -259,137 +122,57 @@ maxIdle="5"
 
 maxActive="100"
 
-This means that connection pool will start with a size of three active 
-
-connections and will grow as more and more requests start coming in. 
-The system is anticipated to provide approximately 100 concurrent users - 
+This means that connection pool will start with a size of three active connections and will grow as more and more requests start coming in. The system is anticipated to provide approximately 100 concurrent users - 
 
 assuming the total user size of around 5000.
-
-
-	MySQL by default defines a BTREE index on all primary key, foreign key 
-
-constraints defined for a table. 
-
-	After analyzing all the queries written in application, it was found 
-
-that Search User query will be used by every trader and administrator for 
-
-selecting a user, hence it was important to add this query as well.
-
-
+	MySQL by default defines a BTREE index on all primary key, foreign key constraints defined for a table. 
+	After analyzing all the queries written in application, it was found that Search User query will be used by every trader and administrator for selecting a user, hence it was important to add this query as well.
 Indexes:
-
-	BTREE index has been defined on all table’s primary Keys (MySQL’s 
-
-default behavior)
-Index for Select User query -Hash index because Search form 
-
-does not support any search type except “Equal to” search.
-
-	create index search_client USING HASH on users (id, last_name, apt_no, 
-
-street,city, zip_code, phone_no, cell_no, email);
+	BTREE index has been defined on all table’s primary Keys (MySQL’s default behavior)
+	Index for Select User query -Hash index because Search form does not support any search type except “Equal to” search.
+	create index search_client USING HASH on users (id, last_name, apt_no, street,city, zip_code, phone_no, cell_no, email);
+	B tree index on id column of Orders table has been defined, since this index will be used every time we display the order summary page for a user.
+View reports functionality has queries on following columns, hence indexes corresponding to the same have been defined. 
+	create index quantity_report USING HASH on orders (id, payment_id, quantity);
+	create index amount_report USING HASH on orders (id, payment_id, total_amt);
+	create index oil_commission_report USING HASH on orders (id, payment_id, oil_adjusted_quantity);
+	create index fees_report USING HASH on orders (id, payment_id, commission_fees);
 	
-B tree index on id column of Orders table has been defined, since this 
-
-index will be used every time we display the order summary page for a user.
-
-	View reports functionality has queries on following columns, hence 
-
-indexes corresponding to the same have been defined. 
-
-	create index quantity_report USING HASH on orders (id, payment_id, 
-
-quantity);
-
-	create index amount_report USING HASH on orders (id, payment_id, 
-
-total_amt);
-
-	create index oil_commission_report USING HASH on orders (id, payment_id, 
-
-oil_adjusted_quantity);
-
-	create index fees_report USING HASH on orders (id, payment_id, 
-
-commission_fees);
-
-
 Application architecture overview:
 
 Backend Technology Used: 
 
 Spring MVC: 
+	Spring Provides MVC Architecture support thus enabling automatic transaction of data into ModelAttribute beans. Also, it enables us to use 3 layered architecture of separating requirement into three layers
 
-	Spring Provides MVC Architecture support thus enabling automatic 
-
-transaction of data into ModelAttribute beans. Also, it enables us to use 3 
-
-layered architecture of separating requirement into three layers
-
-
-Controller Layer:
- 
+Controller Layer: 
 	For Accepting data from Frontend and returning data back.
-
 Service Layer:
- 	
 	For performing business logic
-Data Access 
-Object Layer:
- 
+Data Access Object Layer:
 	For Doing all Data access tasks.
-Spring:
-JDBC templates.
-Spring JDBC 
-
-automatically creates a connection to the Data source defined in ots-servlet.xml 
-
-and executes prepared statement as called.
-
+Spring:JDBC templates.
+	Spring JDBC automatically creates a connection to the Data source defined in ots-servlet.xml and executes prepared statement as called.
 
 MySQL:
-
 	MySQL being free as backend database
-
-
 DBCP for connection pooling:
+	Since this will be used by many customers, and traders,connection pooling was implemented in order to avoid connection overhead
 
-	Since this will be used by many customers, and traders,connection 
-
-pooling was implemented in order to avoid connection overhead
-
-
-Frontend Technology used:
- 
+Frontend Technology used: 
 	JSP, jQuery, HTML5, JSP EL
-
-	These were used in order to render the dynamic data received from 
-
-backend and for sending data to backend
-
- 
+	These were used in order to render the dynamic data received from backend and for sending data to backend
+	
 CSS, Bootstrap:
-
-	Used for Look and Feel of the Application
-Google Charts API
-Used for 
-
-displaying several reports that managers can analyze.
-
+Used for Look and Feel of the Application Google Charts API
+Used for displaying several reports that managers can analyze.
 
 Server: 
-
 	Tomcat 8
-Development 
-Environment:  
-
+Development Environment:  
 	Eclipse, Maven, MySQL, Chrome Debug Tools
-
-
+	
 Source control management: 
-
 		GIT
 
 
