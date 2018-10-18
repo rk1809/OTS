@@ -175,235 +175,85 @@ Development Environment:
 Source control management: 
 		GIT
 		
-	As we can see in the above architecture diagram, JSP, jQuery and CSS are primarily used in order to render the frontend of the oil transaction system. 
-
-The presentation layer communicates with the Spring Controller called 
-
-“HomeController”. 
-Internally Spring uses Front-Controller pattern in order to 
-
-map these requests to individual mappings. 
-	
-Controller calls Service layer for executing the business logic 
-
-required. 
-	
-Service Layer calls Dao Layer for executing Queries and fetching the 
-
-result from database. 
-	Request mapping jQuery Script for communicating with Backend
-
+ As we can see in the above architecture diagram, JSP, jQuery and CSS are primarily used in order to render the frontend of the oil transaction system. The presentation layer communicates with the Spring Controller called “HomeController”. 
+ Internally Spring uses Front-Controller pattern in order to map these requests to individual mappings. 
+ Controller calls Service layer for executing the business logic required. 	
+ Service Layer calls Dao Layer for executing Queries and fetching the result from database. 
+ Request mapping jQuery Script for communicating with Backend
 Functions.js
-
-	This JavaScript file has all AJAX calls that are made to the backend for 
-
-sending/returning view and or data to be displayed. The code looks like 
-
-following, with Different URLs, data and request types. 
-
-	Following call makes a POST backend request to “/placeOrder” Request 
-
-mapping written in Home controller and displays the html received in the 
-
-container.
+	This JavaScript file has all AJAX calls that are made to the backend for sending/returning view and or data to be displayed. The code looks like following, with Different URLs, data and request types. 
+	Following call makes a POST backend request to “/placeOrder” Request mapping written in Home controller and displays the html received in the container.
 
 function putOrder () 
 	{
 $. ajax ({
-type: "POST",
-
+	type: "POST",
 	url: "placeOrder",
-data: $("#placeOrderForm"). serialize(),
-			
-
-success: function(data){
-$("#container").html(data);
-			}});}
+	data: $("#placeOrderForm"). serialize(),
+	success: function(data){
+	$("#container").html(data);
+	}});}
 
 Modules from HomeController
-
 @RequestMapping (value = "/home", method = RequestMethod.GET)
-
-	This method is invoked eveytime when user launches the home page of the 
-
-application. This method checks whether user is logged in and whether user is 
-
-trader or not. It returns view of order summary for Clients where as it returns 
-
-the search page for traders and managers. If user is not logged in, it simply 
-
-presents user with the Login form.
-
+	This method is invoked eveytime when user launches the home page of the application. This method checks whether user is logged in and whether user is trader or not. It returns view of order summary for Clients where as it returns the search page for traders and managers. If user is not logged in, it simply presents user with the Login form.
 
 @RequestMapping (value = "/login", method = RequestMethod.POST)
-
-	This method accepts user Id and password and validates the credentials. 
-
-It internally calls UserDaoImpl.getUserDetails and verifies email/Password 
-
-combination by using aes_decrypt method for decrypting the password stored in 
-
-the database.
-
+	This method accepts user Id and password and validates the credentials. It internally calls UserDaoImpl.getUserDetails and verifies email/Password combination by using aes_decrypt method for decrypting the password stored in the database.
 
 @RequestMapping (value = "/searchUser", method = RequestMethod.POST)
-
-	This method accepts search form From User and executes an OR search on 
-
-all the fields. Please note that it executes Exact search and returns all 
-
-records present.
-
+	This method accepts search form From User and executes an OR search on all the fields. Please note that it executes Exact search and returns all records present.
 
 @RequestMapping (value = "/selectUser", method = RequestMethod.GET)
-
-	This method is called when Trader/Manager needs to perform certain 
-
-functions like view order summary, balance, accept payment, Cancel order, etc. 
-
-This method sets the user in the session and uses the same for performing all 
-
-user actions
-.
+	This method is called when Trader/Manager needs to perform certain functions like view order summary, balance, accept payment, Cancel order, etc. This method sets the user in the session and uses the same for performing all user actions
 
 @RequestMapping (value = "/insertOrUpdateUser", method = RequestMethod.POST)
-
-	This method is called when user clicks on submit button on create user 
-
-screen. This method validates where both the passwords entered are same or not. 
-
-If complete data is valid, it creates a user by calling UserDaoImpl.INSERT_USER 
-
-method through service. Also, for trader, it creates an entry in trader table, 
-
-and for client, it creates an entry in client table.
-
+	This method is called when user clicks on submit button on create user screen. This method validates where both the passwords entered are same or not. If complete data is valid, it creates a user by calling UserDaoImpl.INSERT_USER method through service. Also, for trader, it creates an entry in trader table, and for client, it creates an entry in client table.
 
 @RequestMapping (value = "/cancelOrder", method = RequestMethod.GET)
-
-	This method is called when Trader/Manager cancels specific orders for a 
-
-client. This method performs following logic
-Creates an entry in cancels table. 
-
-This entry helps track the trader who performed the cancellation
-Updates Account 
-
-information of the user - especially Total Oil quantity and Credit balance. For 
-
-cancelled “Buy Oil” and sell oil transactions.
-
+	This method is called when Trader/Manager cancels specific orders for a client. This method performs following logic
+Creates an entry in cancels table. This entry helps track the trader who performed the cancellation Updates Account information of the user - especially Total Oil quantity and Credit balance. For cancelled “Buy Oil” and sell oil transactions.
 
 @RequestMapping (value = "/payment", method = RequestMethod.GET)
-
-	This method is called when user select orders to pay for. The total 
-
-amount is calculated based on orders selected and user is presented a Credit 
-
-card payment screen. Here, user’s existing balance is taken into consideration 
-
-while accepting payment. Stripe - third party payment gateway service has been 
-
-used for accepting user’s credit card information. Once provided, the form gets 
-
-redirected to Stripe form that is setup in Test mode. Accepted credit card 
-
-number to be used is 4242 4242 4242 4242
- 
+        This method is called when user select orders to pay for. The total amount is calculated based on orders selected and user is presented a Credit card payment screen. Here, user’s existing balance is taken into consideration 
+while accepting payment. Stripe - third party payment gateway service has been used for accepting user’s credit card information. Once provided, the form gets redirected to Stripe form that is setup in Test mode. Accepted credit card number to be used is 4242 4242 4242 4242
 
 @RequestMapping (value = "/paymentAccepted", method = RequestMethod.POST)
-
-	This method is called when used provides the credit card information. 
-
-This information is then used and an entry is made to the payments table. Also, 
-
-for corresponding orderIds, payment_id column is populated in the database. once 
-
+	This method is called when used provides the credit card information. This information is then used and an entry is made to the payments table. Also, for corresponding orderIds, payment_id column is populated in the database. once 
 done, it updates the user’s balance to zero.
 
-
 @RequestMapping (value = "/topMenu", method = RequestMethod.GET)
-
-	This method is called in order to determine and display the different 
-
-features that user has access to. It is responsible for displaying “View 
-
-Reports” Menu in the top right of the panel, once manager has logged on to the 
-
+       This method is called in order to determine and display the different features that user has access to. It is responsible for displaying “View Reports” Menu in the top right of the panel, once manager has logged on to the 
 system.
 
 @RequestMapping (value = "/loadOrders", method = RequestMethod.GET)
-
-	This method fetches orders from the database by invoking 
-
+       This method fetches orders from the database by invoking 
 OrderDaoImpl.getOrders() method. The Orders table is joined with Cancels table 
-
 and the same is used for displaying the orders in the UI. 
 
-
 @RequestMapping (value = "/placeOrder", method = RequestMethod.POST)
-
-	This method is used for creating order. It creates an entry in the order 
-
-table by invoking OrderDaoImpl.createOrder method. It then creates an entry in 
-
-the places table in order to store information related to the user who created 
-
-the order. For Buy transactions, total oil owned by the user is increased, 
-
-whereas for Sell transactions, the oil quantity is reduced.
-
+	This method is used for creating order. It creates an entry in the order table by invoking OrderDaoImpl.createOrder method. It then creates an entry in the places table in order to store information related to the user who created 
+the order. For Buy transactions, total oil owned by the user is increased, whereas for Sell transactions, the oil quantity is reduced.
 
 @RequestMapping (value = "/logout", method = RequestMethod.GET)
-
 	This method invalidates the session and logs user out.
 
-
 @RequestMapping (value = "/viewReports", method = RequestMethod.GET)
-
 	This method is responsible for displaying several results that are 
-
 displayed to Managers. Reports are mainly displayed at aggregated level.  
 
 Queries used for generating these reports are as listed below. 
 
+select sum(o.quantity) as sums,(isnull(o.payment_id)!=true) as payment_avl, (isnull(c.client_id)!=true) as is_cancelled from orders o left join cancels c on o.id=c.order_id group by payment_avl,is_cancelled order by sums asc
 
-select sum(o.quantity) as sums,(isnull(o.payment_id)!=true) as payment_avl, 
+select sum(o.total_amt) as sums,(isnull(o.payment_id)!=true) as payment_avl, (isnull(c.client_id)!=true) as is_cancelled from orders o left join cancels c on o.id=c.order_id group by payment_avl,is_cancelled order by sums asc
 
-(isnull(c.client_id)!=true) as is_cancelled from orders o left join cancels c on 
+select sum(o.oil_adjusted_quantity) as sums, (isnull(o.payment_id)!=true) as payment_avl, (isnull(c.client_id)!=true) as is_cancelled from orders o left join cancels c on o.id=c.order_id group by payment_avl,is_cancelled order by sums asc
 
-o.id=c.order_id group by payment_avl,is_cancelled order by sums asc
+select sum(o.commission_fees) as sums,(isnull(o.payment_id)!=true) as payment_avl, (isnull(c.client_id)!=true) as is_cancelled from orders o left join cancels c on o.id=c.order_id group by payment_avl,is_cancelled order by sums asc
 
-
-select sum(o.total_amt) as sums,(isnull(o.payment_id)!=true) as payment_avl, 
-
-(isnull(c.client_id)!=true) as is_cancelled from orders o left join cancels c on 
-
-o.id=c.order_id group by payment_avl,is_cancelled order by sums asc
-
-
-select sum(o.oil_adjusted_quantity) as sums, (isnull(o.payment_id)!=true) as 
-
-payment_avl, (isnull(c.client_id)!=true) as is_cancelled from orders o left join 
-
-cancels c on o.id=c.order_id group by payment_avl,is_cancelled order by sums asc
-
-
-select sum(o.commission_fees) as sums,(isnull(o.payment_id)!=true) as 
-
-payment_avl, (isnull(c.client_id)!=true) as is_cancelled from orders o left join 
-
-cancels c on o.id=c.order_id group by payment_avl,is_cancelled order by sums asc
-
-
-	These results are then aggregated and Google Json based charts API is 
-
-used for displaying several charts to the manager. 
-	These reports give manager insight into how much money/oil is pending or 
-
-cancelled or is paid for by the users. 
+These results are then aggregated and Google Json based charts API is used for displaying several charts to the manager. 
+These reports give manager insight into how much money/oil is pending or cancelled or is paid for by the users. 
 	
-This application takes care of all the requirements that have been 
-
-specified by the friend for Oil transaction management system.
+This application takes care of all the requirements that have been specified by the friend for Oil transaction management system.
 
