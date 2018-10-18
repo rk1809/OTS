@@ -1,12 +1,8 @@
 OTS PROJECT:
 	I have implemented a Web Based Oil Transaction System which can serve 
-
 three types users i.e. Client, Trader, and Manager. A client can buy/sell oil 
-
 directly, depending on his current oil reserves, or contact a trader to perform 
-
 these transactions for him. Based on each transaction, client pays commission to 
-
 the company in form of either oil or cash.
 	There are certain levels are available for clients based upon their 
 
