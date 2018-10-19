@@ -24,15 +24,20 @@ Spring JDBC templates.
 
 MySQL:
 	MySQL is used as a backend DB.
+	
 Frontend:
  	JSP, HTML5, jQuery, JSP EL
 	These technologies were used in order to render the dynamic data received from backend and also for sending back.
+	
 Bootstrap CSS:
 	Is used mainly for the look and feel of the website.
+	
 Server: 
 	Tomcat 8
+	
 Development Environment:  
 	MySQL, Eclipse, Maven.
+	
 Source control management: 
 	GIT
 
